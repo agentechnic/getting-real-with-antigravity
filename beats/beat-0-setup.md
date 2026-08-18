@@ -16,14 +16,16 @@ agy models         # lists the models your account can reach
 
 There is no `agy doctor`. If the CLI is not installed yet, `agy install` sets it up; the second command above is the real health check, because it only answers once you are signed in and your account is eligible.
 
-Then get the material. Download **[nussaa.zip](https://github.com/agentechnic/nussaa-tickets-corpus/releases/download/v1.0.0/nussaa.zip)**, unzip it, and:
+Then get the material. Download **[nussaa.zip](https://github.com/agentechnic/nussaa-tickets-corpus/releases/download/v1.1.0/nussaa.zip)**, unzip it, and:
 
 ```bash
 cd nussaa
 ls
 ```
 
-You should see `tickets-q1`, `tickets-q2`, `context`, `AGENTS.md` and `README.md`.
+You should see `tickets-q1`, `tickets-q2`, `context`, `AGENTS.md`, `CLAUDE.md` and `README.md`.
+
+Two rules files, and they are the same file. `agy` reads `AGENTS.md`; Claude Code reads `CLAUDE.md` and ignores `AGENTS.md`. The corpus ships both so the folder works with either tool. **Today you care about `AGENTS.md`** — leave the other one alone.
 
 If something is red, say so now. At minute forty everyone else will be building and you will be installing.
 

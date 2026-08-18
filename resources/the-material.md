@@ -4,9 +4,9 @@ One folder, no git required.
 
 ## Get it
 
-**[Download nussaa.zip](https://github.com/agentechnic/nussaa-tickets-corpus/releases/download/v1.0.0/nussaa.zip)**
+**[Download nussaa.zip](https://github.com/agentechnic/nussaa-tickets-corpus/releases/download/v1.1.0/nussaa.zip)**
 
-That is corpus **v1.0.0**, the version this workshop's numbers were calibrated against. It lives in its own repository, [nussaa-tickets-corpus](https://github.com/agentechnic/nussaa-tickets-corpus), because more than one workshop uses it.
+That is corpus **v1.1.0**, the version this workshop's numbers were calibrated against. It lives in its own repository, [nussaa-tickets-corpus](https://github.com/agentechnic/nussaa-tickets-corpus), because more than one workshop uses it.
 
 Unzip it anywhere you like, then:
 
@@ -44,6 +44,8 @@ The whole of `tickets-q1/` is about 38KB of text. Worth knowing, because somebod
 ### About that filename
 
 `AGENTS.md` is a shared convention rather than a product feature — several agent tools read a file by that name, so the same conventions work in more than one place. This CLI also reads `GEMINI.md`, and anything you put under `.agents/rules/`.
+
+Not every tool joined in. Claude Code reads `CLAUDE.md` and not `AGENTS.md`, which is why the folder carries both — identical files, two names, so the same corpus works whichever agent you point at it.
 
 ## The company
 
