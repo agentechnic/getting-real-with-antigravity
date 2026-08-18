@@ -1,0 +1,143 @@
+# Beat 3 — The Work
+
+**Duration:** 45 minutes
+
+**Goal:** Everyone produces a real themes report. Someone in the room finds the thing hiding in the data.
+
+<!-- participant-start -->
+## The actual job
+
+Forty-five minutes. The longest stretch of the day, and most of it is quiet.
+
+You are writing **`themes-2026-q1.md`, saved in the `nussaa/` folder itself** — not inside `context/`. That folder holds what you were given; your report is what you produce.
+
+**Five parts:** pick a model, plan it, build it, read what you got, then change the spec and watch the plan change.
+
+### 1. Pick a model, on purpose
+
+```text
+/model
+```
+
+You get a list, and on the free tier it spans several families — Gemini Flash at low, medium or high effort, Gemini Pro, and Claude and GPT models in a separate quota pool. Thinking models also expose an **effort** setting, which is how much reasoning you are willing to pay for.
+
+Pick a **Flash model at medium or high effort** for this beat. It is fast, it counts fine, and it comes out of the Gemini pool rather than the smaller shared one.
+
+The point is not which one you picked. The point is that you picked. Most people never look at this menu, and then wonder why a simple job burned a week of quota.
+
+### 2. Plan before you build
+
+Turn on Plan Mode:
+
+```text
+/plan
+```
+
+You can also start the session in it with `agy --mode plan`. Either way the agent now cannot edit or run things freely — it reads, searches, and writes you a plan.
+
+Then ask for the work:
+
+```text
+Read the Q1 tickets and work out the themes with exact counts.
+Write the result to themes-2026-q1.md in this folder, matching the
+format of context/themes-2025-q4.md.
+```
+
+You get a numbered plan and no file. Before you approve it, look for one thing:
+
+**Is it going to count, or estimate?** A plan that says "sample the tickets" or "review a representative selection" will hand you a confident number that is wrong. Push back now. It costs a sentence. Catching it after the report exists costs the report.
+
+Approve when the plan says what you meant, then let it run.
+
+### 3. While it works
+
+Read the diffs going past. You do not need to read every line. You are looking for anything that does not belong.
+
+If it starts doing the wrong thing, resist arguing with it. Open `AGENTS.md`, fix the rule, re-plan. The file wins.
+
+`/diff` shows you what has changed since you started, if the output scrolled past too fast.
+
+### 4. Read your own report
+
+When it finishes, read what you produced. Then answer these, out loud if someone is next to you:
+
+1. Does every theme have a number, or do some have "several"?
+2. Could you defend that number if someone asked where it came from?
+3. **Is there anything in here that looks like a cause rather than a symptom?**
+
+Sit with the third one.
+
+You have a list of things customers complained about. Complaints have reasons. Nothing in `tickets-q1/` tells you the reason, because customers do not know it either. Something else in that folder might.
+
+### 5. Change the spec, not the code
+
+Last part of this beat, and it is the one that transfers to your own work.
+
+Open `AGENTS.md`. Under **Conventions**, add one line:
+
+```text
+- Every theme carries a trend against last quarter: new, up, down, or flat.
+```
+
+Read the file before you add it. There is already a rule about *new* themes, so this one is deliberately different: it asks for a comparison on every theme, including the ones that were there last time.
+
+Save it. Re-run `/plan`.
+
+Watch what happens. You did not re-prompt. You did not explain yourself again. You edited a file and the plan changed.
+
+That is the loop you are taking home. Everything after this beat is about making that loop repeatable.
+<!-- participant-end -->
+
+## Facilitator
+
+Forty-five minutes, mostly silent. Circulate, do not narrate.
+
+### The planted signal
+
+`tickets-q1/` contains **36 tickets** about drivers unable to find the customer's address. **Four** of them fall before 11 February. **Thirty-two** fall on or after it, and 26 land inside the three weeks following. On 11 February, v4.2 shipped a map-pin address picker that replaced free-text address entry.
+
+The full answer, with what a good report does and what a weak one does, is in `facilitator/nussaa-answer-key.md`. **Read it before the session, not during.**
+
+### How to run the moment
+
+Do not announce it. When the first reports land, ask the room:
+
+> *"Anything in here that looks like a cause rather than a symptom?"*
+
+Wait a full minute. It feels long. Let it be long.
+
+If nobody bites, narrow it once:
+
+> *"When did the driver complaints start? What shipped that week?"*
+
+Whoever finds it says it, not you.
+
+**There are two routes in, and both are legitimate.** Some people correlate the dates against `context/changelog.md`. Others notice the theme is absent from last quarter's report, and a theme at 18% that did not exist in Q4 is a new problem with a cause. The second route is faster and several people take it.
+
+### Do not correct their counts
+
+A full dry run of this material on `agy` produced 53 for late delivery and 33 for the driver theme, where the generator says 55 and 36. It also placed the pre-release baseline at 4 tickets and the post-release cluster at 29. Clustering is a judgement call. A second analyst differs again.
+
+What matters is that the report finds the theme, states a count the attendee can defend, and connects it to v4.2 by date. **A report saying 33 is not wrong.** Marking it against the answer key teaches the opposite of the habit you are building.
+
+### The model menu is worth ninety seconds, not more
+
+Somebody will ask which model is "best". The useful answer is that a counting-and-grouping job over 38KB of text does not need your most expensive option, and that the effort setting is the dial most people never touch. Then move on — this beat is not a model bake-off, and a room comparing models is a room not writing a report.
+
+If someone's run is crawling, check they have not put a heavy thinking model on high effort for a job that does not need it.
+
+### Two things to call out from the front
+
+- About twenty minutes in: *"Notice how short your prompts have got. You stopped engineering them somewhere around minute ten."*
+- About thirty-five minutes in: *"If it is doing the wrong thing right now, the file is wrong. Fix the file."*
+
+### When someone is stuck
+
+1. Are they in Plan Mode? Most confusion is a skipped plan.
+2. Did they read the plan, or approve it? Different problems.
+3. Ask to see their `AGENTS.md`. If they deleted it or wandered out of `nussaa/`, that is the whole issue.
+4. Are they sitting on an unanswered permission prompt? It looks exactly like a hang.
+
+Pair anyone badly stuck with a neighbour who is working. Do not take the keyboard.
+
+[← Back to home](index.html)

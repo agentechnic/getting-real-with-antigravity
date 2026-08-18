@@ -1,0 +1,96 @@
+# Write Your Own AGENTS.md
+
+Beat 7 asks you to write one of these tonight, for a folder you already work in. This page is how.
+
+## The discipline
+
+**If removing a line would not cause a mistake, cut it.**
+
+Every turn, the agent re-reads `AGENTS.md` alongside your message and whatever files it has open. Reading something is not the same as reliably following it. The model applies a limited set of instructions at a time, and that number stays roughly constant however much you write. So more text means the rules that matter compete with padding that does not.
+
+There is also a hard ceiling on how much rules text gets loaded, but you will hit the useful limit long before the technical one. Sixty lines is a good target. A hundred is a smell.
+
+## Which filename
+
+Any of these work, and they stack:
+
+| File | When to use it |
+|---|---|
+| `AGENTS.md` | The default. A shared convention several agent tools read, so the same file works elsewhere. |
+| `GEMINI.md` | Also read by this CLI. Use it if you specifically want Gemini-tool-only instructions. |
+| `.agents/rules/*.md` | When the rules get long enough to want splitting by topic. |
+| A global rules file in your home config | Personal preferences you want in every project. Find its real location with `agy inspect`. |
+
+Nested folders can carry their own file. A monorepo where each service has different conventions is the case that justifies it.
+
+## The one you used today
+
+This is the whole file from `nussaa/`, and it is what made Beat 2 work without anyone typing a prompt about Arabic:
+
+```markdown
+# AGENTS.md — Nussaa support analysis
+
+## What this is
+A quarter of customer support tickets for Nussaa, a food delivery app
+in Riyadh, plus the product changelog and last quarter's themes report.
+The job is to work out what this quarter's themes are and write them up.
+
+## The material
+- `tickets-q1/` — one ticket per file. Header fields, then whatever
+  the customer actually wrote.
+- `tickets-q2/` — a later batch. Leave it alone unless asked.
+- `context/changelog.md` — what shipped, and when.
+- `context/themes-2025-q4.md` — last quarter's report.
+
+## Language
+Tickets arrive in Arabic, English, and a mix of both. The Arabic is
+mostly colloquial Saudi as people type it — inconsistent spelling,
+missing hamzas, no diacritics — with fusha in the longer formal
+complaints.
+
+The same complaint appears in all three registers. Group by what the
+customer means, never by the language they wrote it in.
+
+## Report format
+Match `context/themes-2025-q4.md` exactly: a `## Summary`, a `## Themes`
+table with ticket counts and share percentages, a short prose section
+per significant theme, and `## Recommendations`.
+
+## Conventions
+- Counts must be exact. Count tickets; do not estimate or sample.
+- A ticket raising several issues is assigned to its dominant one.
+- Quote real ticket text in its original language. Do not translate.
+- Do not modify anything under `tickets-q1/` or `tickets-q2/`.
+
+## What to ask me about, never assume
+- Any theme that is not in last quarter's report — say why it is new.
+- Anything that looks like a cause rather than a symptom.
+```
+
+Notice how much of the day that file quietly did. The language rule stopped three fake themes. The counting rule stopped a plausible estimate. The last line is what made someone in the room find the release.
+
+## The shape, for your own folder
+
+**What this is.** Two sentences. What lives here and what the work is.
+
+**The material.** Where things are, and what the agent should not touch.
+
+**Conventions.** The rules you would give a new colleague on day one. The ones you would notice if they broke.
+
+**What to ask me about, never assume.** The most underused section. Anything with a cost attached: adding a dependency, changing a shared format, deleting something. This is where you convert "I hope it checks with me" into "it checks with me."
+
+## Writing yours tonight
+
+Start from what irritates you.
+
+Think of the last three times you corrected an agent, or a colleague, on the same thing. Each of those is one line. That is your first `AGENTS.md`, and it will already be better than most.
+
+Then leave it alone until something else irritates you, and add that line. A file that grows one correction at a time stays honest. A file written in one sitting from imagination is mostly padding.
+
+## Two tests worth running
+
+**The readback.** In a fresh session, in Plan Mode: *"Read AGENTS.md and tell me what you understood about how I want this work done."* If the readback is wrong, the file is wrong — and you found out in thirty seconds instead of after a bad report.
+
+**The ordinary task.** Ask for something routine. If the agent does the thing you would have had to correct, the file is working. If you find yourself typing the same correction again, that correction belongs in the file.
+
+[← Back to home](index.html)

@@ -1,0 +1,7 @@
+.DS_Store
+*.swp
+.preview-*.png
+
+# nussaa.zip is deliberately NOT ignored — GitHub Pages serves it as the
+# attendee download. Rebuild it with scripts/build-download.sh after any
+# change to nussaa/.

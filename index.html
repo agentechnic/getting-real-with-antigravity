@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do It Once, Then Never Again — Agentechnic</title>
+<meta name="description" content="A 3-hour Antigravity CLI workshop in Riyadh. Do one piece of real work, then turn it into a Skill that repeats. Run by Agentechnic.">
+<meta property="og:title" content="Do It Once, Then Never Again">
+<meta property="og:description" content="Do the work once with the Antigravity CLI, then keep it. Three hours, Riyadh.">
+<meta property="og:type" content="website">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          'bg-base':       '#121317',
+          'bg-panel':      '#18191d',
+          'bg-card':       '#1e1f24',
+          'bg-card-hover': '#212226',
+          'border-soft':   '#2b2d33',
+          'fg-base':       '#e8eaed',
+          'fg-muted':      '#9aa0a6',
+          'accent':        '#8ab4f8',
+          'accent-hover':  '#aecbfa',
+          'accent-strong': '#3279f9',
+          'accent-soft':   'rgba(138, 180, 248, 0.14)',
+        },
+        fontFamily: {
+          'sans': ['Google Sans Flex', 'Google Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  body { background-color: #121317; color: #e8eaed; }
+  /* Terminal hero box — mirrors the agy welcome panel aesthetic */
+  .terminal-box {
+    border: 1px solid #8ab4f8;
+    border-radius: 0.25rem;
+    position: relative;
+    margin-top: 1.25rem;
+  }
+  .terminal-box-label {
+    position: absolute;
+    top: -0.65em;
+    left: 1rem;
+    background: #121317;
+    padding: 0 0.5rem;
+    color: #8ab4f8;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+  .terminal-panel-heading {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #8ab4f8;
+    margin-bottom: 0.5rem;
+  }
+  /* Left panel: bottom border on mobile only (separator div handles desktop) */
+  .terminal-panel-left { border-bottom: 1px solid #8ab4f8; }
+  @media (min-width: 768px) { .terminal-panel-left { border-bottom: none; } }
+  /* Full-height vertical separator between panels — desktop only */
+  .terminal-divider { display: none; }
+  @media (min-width: 768px) {
+    .terminal-divider { display: block; width: 1px; background-color: #8ab4f8; flex-shrink: 0; }
+  }
+  /* Font control buttons */
+  .font-btn:hover { color: #8ab4f8 !important; }
+  /* ASCII block art scaled to fit inside the terminal box left panel */
+  .ascii-logo-small {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    color: #8ab4f8;
+    white-space: pre;
+    line-height: 1.1;
+    font-size: 0.45rem;
+    font-weight: bold;
+    letter-spacing: 0;
+    opacity: 0.9;
+  }
+  @media (min-width: 640px)  { .ascii-logo-small { font-size: 0.55rem; } }
+  @media (min-width: 1024px) { .ascii-logo-small { font-size: 0.65rem; } }
+  .card {
+    background-color: #1e1f24;
+    border: 1px solid #2b2d33;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    transition: all 0.15s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover {
+    background-color: #212226;
+    border-color: rgba(138, 180, 248, 0.4);
+    transform: translateY(-1px);
+  }
+  .card-accent {
+    background-color: #8ab4f8;
+    border: 1px solid #3279f9;
+    color: #121317;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    transition: all 0.15s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-accent:hover {
+    background-color: #aecbfa;
+    transform: translateY(-1px);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.875rem;
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    border: 1px solid transparent;
+  }
+  .btn-primary {
+    background-color: #8ab4f8;
+    color: #121317;
+  }
+  .btn-primary:hover { background-color: #aecbfa; }
+  .btn-secondary {
+    background-color: transparent;
+    color: #e8eaed;
+    border-color: #3c3f45;
+  }
+  .btn-secondary:hover { border-color: #8ab4f8; color: #8ab4f8; }
+  .btn-on-accent {
+    background-color: #121317;
+    color: #8ab4f8;
+  }
+  .btn-on-accent:hover { background-color: #0c0d10; }
+  .tag {
+    display: inline-block;
+    padding: 0.1875rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #8ab4f8;
+    background-color: rgba(138, 180, 248, 0.14);
+  }
+  /* Terminal output preview */
+  .term-output {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.6875rem;
+    line-height: 1.6;
+    color: #bdc1c6;
+    white-space: pre;
+  }
+  @media (min-width: 640px)  { .term-output { font-size: 0.75rem; } }
+  @media (min-width: 1024px) { .term-output { font-size: 0.8125rem; } }
+  .term-cmd  { color: #8ab4f8; }
+  .term-ok   { color: #81c995; }
+  .term-warn { color: #fdd663; }
+  .term-dim  { color: #6a6a71; }
+  .term-bold { color: #e8eaed; font-weight: 600; }
+  .heart {
+    display: inline-block;
+    color: #8ab4f8;
+    transform: translateY(-1px);
+    margin: 0 0.125rem;
+  }
+  /* Push buttons to card bottom across all grid rows */
+  .card > a.btn, .card-accent > a.btn { margin-top: auto; }
+  /* Card body typography — readable at all viewport widths */
+  .card p, .card-accent p {
+    font-size: 0.9125rem;
+    line-height: 1.75;
+  }
+  .card h3, .card-accent h3 {
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+</style>
+</head>
+<body class="font-sans">
+
+<div class="max-w-6xl mx-auto px-6 py-12 md:py-16">
+
+  <!-- ===== Hero ===== -->
+  <header class="mb-16">
+    <div class="terminal-box">
+      <h1 class="terminal-box-label">Do It Once, Then Never Again</h1>
+      <div class="flex flex-col md:flex-row">
+
+        <!-- Left column: content only — divider stretches to flex row height -->
+        <div class="terminal-panel-left flex-1 min-w-0">
+          <div class="p-6 md:p-8">
+            <div class="ascii-logo-small mb-5">
+ █████  ███    ██ ████████ ██
+██   ██ ████   ██    ██    ██
+███████ ██ ██  ██    ██    ██
+██   ██ ██  ██ ██    ██    ██
+██   ██ ██   ████    ██    ██
+
+ ██████  ██████   █████  ██    ██ ██ ████████ ██    ██
+██       ██   ██ ██   ██ ██    ██ ██    ██     ██  ██
+██   ███ ██████  ███████ ██    ██ ██    ██      ████
+██    ██ ██   ██ ██   ██  ██  ██  ██    ██       ██
+ ██████  ██   ██ ██   ██   ████   ██    ██       ██</div>
+            <p class="font-mono leading-relaxed mb-4" style="color: #cdd4dc; font-size: 0.9375rem;">
+              A 3-hour workshop on doing real work with the Antigravity CLI,<br>then turning that work into something you keep.
+            </p>
+            <div class="font-mono text-sm mb-5" style="color: #6a6a71;">
+              <span style="color: #8ab4f8;">Agentechnic</span>&nbsp;&nbsp;·&nbsp;&nbsp;v1.0&nbsp;&nbsp;·&nbsp;&nbsp;Riyadh&nbsp;&nbsp;·&nbsp;&nbsp;August 2026
+            </div>
+            <div class="pt-4" style="border-top: 1px solid #2b2d33;">
+              <div class="terminal-panel-heading">Who it's for</div>
+              <p class="font-mono text-sm" style="color: #9aa0a6; line-height: 1.65;">
+                Students, engineers, devops, managers. No cloud or infrastructure background assumed, and the anchor task is not a coding task. If you can open a terminal and you have ever drowned in a pile of feedback, you're ready.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider — flex child, stretches to full flex-row height -->
+        <div class="terminal-divider" aria-hidden="true"></div>
+
+        <!-- Right panel: workshop vitals -->
+        <div class="p-6 md:p-8 md:w-80 shrink-0">
+          <div class="terminal-panel-heading">What you'll build</div>
+          <p class="font-mono text-sm mb-5" style="color: #9aa0a6; line-height: 1.65;">
+            <span style="color: #cdd4dc;">A Skill you keep.</span> You analyse a quarter of real support tickets, then harvest that whole workflow into a Skill that fires by itself next quarter.
+          </p>
+          <div class="mb-4" style="border-top: 1px solid #2b2d33;"></div>
+          <div class="terminal-panel-heading">What to bring</div>
+          <p class="font-mono text-sm" style="color: #9aa0a6; line-height: 1.65;">
+            A personal Google account · a laptop that runs terminal commands. No paid plan needed.
+          </p>
+        </div>
+
+      </div>
+      <!-- Full-width prompt bar spanning both columns, centered, accent top border -->
+      <div class="flex items-center justify-center gap-2 px-6 py-3" style="border-top: 1px solid #8ab4f8;">
+        <span class="font-mono" style="color: #8ab4f8; font-size: 0.9rem;">›</span>
+        <span class="font-mono text-sm" style="color: #6a6a71;">nussaa &nbsp;·&nbsp; 3 hours &nbsp;·&nbsp; mixed skill &nbsp;·&nbsp; Riyadh 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Lead paragraph ===== -->
+  <section class="mb-16 text-center">
+    <div class="max-w-2xl mx-auto text-fg-muted leading-relaxed">
+      <p class="mb-4">
+        Most people can get an AI to produce something once. Doing the same job next month without starting over is a different skill, and almost nobody teaches it.
+      </p>
+      <p>
+        So we do one piece of real work together, properly. Then we turn it into a Skill, send a subagent at it to find out what we forgot to write down, and fix that. Three hours. You leave with a working tool, not notes.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== Why This Works ===== -->
+  <section class="mb-16">
+    <h2 class="text-2xl font-semibold mb-1 text-center">Why This Works</h2>
+    <p class="text-fg-muted text-sm mb-8 text-center">Four pieces, composed. Nobody writes a framework.</p>
+
+    <!-- The loop -->
+    <div class="max-w-3xl mx-auto mb-10 p-8 rounded-lg" style="background:#1e1f24;border:1px solid #2b2d33;">
+      <div class="text-xs uppercase tracking-widest font-semibold mb-4" style="color:#8ab4f8;letter-spacing:0.1em;">The mental model — the loop</div>
+      <p class="leading-relaxed" style="color:#cdd4dc;font-size:0.9375rem;line-height:1.8;">
+        The Antigravity CLI runs a loop. Each turn it reads your rules files (<code style="background:rgba(138,180,248,0.14);color:#aecbfa;padding:0.1rem 0.35rem;border-radius:3px;font-size:0.8125rem;">AGENTS.md</code>, plus whatever it has opened), acts through tools, and stops for your review. The part people miss is that the reading happens <em style="color:#e8eaed;">every turn</em>, not once at the start. <strong style="color:#e8eaed;">So you steer it by editing files, not by arguing in chat.</strong> A correction typed into the conversation dies with the session. The same correction written into a file gets re-read forever.
+      </p>
+    </div>
+
+    <!-- Three theses -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
+      <div class="card">
+        <div class="tag mb-3">Thesis 1</div>
+        <h3 class="font-semibold mb-2" style="font-size:1rem;">Do the work once, then keep it</h3>
+        <p class="text-fg-muted leading-relaxed">Getting a good answer out of an AI is not the hard part any more. Getting the same answer next quarter, without re-explaining yourself, is. A <code style="background:rgba(138,180,248,0.14);color:#aecbfa;padding:0.1rem 0.3rem;border-radius:3px;font-size:0.8125rem;">SKILL.md</code> is how the work survives the session.</p>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Thesis 2</div>
+        <h3 class="font-semibold mb-2" style="font-size:1rem;">You cannot test your own instructions</h3>
+        <p class="text-fg-muted leading-relaxed">You were there when you wrote them, so you read straight past the step that only makes sense if you remember the conversation. Send a subagent at it with no context and ask what it had to guess. The guesses are your missing sentences.</p>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Thesis 3</div>
+        <h3 class="font-semibold mb-2" style="font-size:1rem;">Give it the reach the task needs</h3>
+        <p class="text-fg-muted leading-relaxed">You will watch this agent try to leave the folder, and watch a permission boundary stop it. Then you hand it exactly one capability on purpose, through one MCP server, and see the difference.</p>
+      </div>
+    </div>
+
+    <!-- The four pieces -->
+    <div class="mb-8">
+      <div class="text-xs uppercase tracking-widest font-semibold mb-4 text-center" style="color:#9aa0a6;">The four pieces you compose</div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="card" style="padding:1.375rem;">
+          <div class="font-mono font-semibold mb-2" style="color:#8ab4f8;font-size:0.9375rem;">skill</div>
+          <p class="text-fg-muted leading-relaxed">Something you want the agent to know how to do. Loads itself when the task matches, and shows up as a slash command.</p>
+        </div>
+        <div class="card" style="padding:1.375rem;">
+          <div class="font-mono font-semibold mb-2" style="color:#8ab4f8;font-size:0.9375rem;">subagent</div>
+          <p class="text-fg-muted leading-relaxed">Something you delegate to a clean context. It has no memory of your session, which is exactly why it can test your Skill.</p>
+        </div>
+        <div class="card" style="padding:1.375rem;">
+          <div class="font-mono font-semibold mb-2" style="color:#8ab4f8;font-size:0.9375rem;">mcp&nbsp;server</div>
+          <p class="text-fg-muted leading-relaxed">A specific capability you choose to grant. One server, one reach, scoped on purpose.</p>
+        </div>
+        <div class="card" style="padding:1.375rem;">
+          <div class="font-mono font-semibold mb-2" style="color:#8ab4f8;font-size:0.9375rem;">plugin</div>
+          <p class="text-fg-muted leading-relaxed">Those bundled, so a teammate installs them with one command — and <code style="background:rgba(138,180,248,0.14);color:#aecbfa;padding:0.05rem 0.25rem;border-radius:3px;font-size:0.75rem;">agy plugin validate</code> tells you it is well formed.</p>
+        </div>
+      </div>
+      <p class="text-center text-fg-muted mt-6 max-w-2xl mx-auto leading-relaxed">
+        Put them together and you have a harness: work that repeats, and a way to find out when it has quietly stopped being right. <strong style="color:#e8eaed;">Building harnesses without building them.</strong>
+      </p>
+    </div>
+
+    <div class="text-center mt-8">
+      <a href="viewer.html?file=resources/how-agy-works.md" class="btn btn-primary">Read the full mental model →</a>
+    </div>
+  </section>
+
+  <!-- ===== What Will You Make ===== -->
+  <section class="mb-16">
+    <h2 class="text-2xl font-semibold mb-1 text-center">What You Take Home</h2>
+    <p class="text-fg-muted text-sm mb-6 text-center">Not the report. The thing that produces the report, every quarter after this one.</p>
+
+    <div class="max-w-3xl mx-auto">
+      <div class="rounded-lg overflow-hidden" style="background:#0e0f12;border:1px solid #2b2d33;">
+        <div class="px-4 py-2 font-mono text-xs" style="background:#1e1f24;color:#9aa0a6;border-bottom:1px solid #2b2d33;">.agents/skills/ticket-themes/SKILL.md</div>
+        <div class="p-5 term-output"><span class="term-dim">---</span>
+<span class="term-cmd">name:</span> <span class="term-bold">ticket-themes</span>
+<span class="term-cmd">description:</span> <span class="term-bold">Analyse a quarter of support tickets into a themes
+  report with exact counts, cross-referenced against the
+  product changelog.</span>
+<span class="term-dim">---</span>
+
+<span class="term-bold">1.</span> Ask which quarter to analyse if the user has not said.
+<span class="term-bold">2.</span> Read every ticket. Count, never sample.
+<span class="term-bold">3.</span> Group by what the customer means, not the language
+   they wrote it in.
+<span class="term-bold">4.</span> A ticket raising several issues counts once, under
+   its dominant one.
+<span class="term-bold">5.</span> Check theme dates against context/changelog.md before
+   writing. A spike that follows a release is a finding.
+<span class="term-bold">6.</span> Match the format of the previous quarter's report.</div>
+      </div>
+
+      <p class="text-fg-muted leading-relaxed mt-6 text-center max-w-2xl mx-auto">
+        You will not write that file from a blank page. You will do the job first, ask the agent to write down what you just did, then fix the two things it got wrong. A subagent will tell you which two.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== Getting Started ===== -->
+  <section class="mb-16">
+    <h2 class="text-2xl font-semibold mb-1 text-center">Getting Started</h2>
+    <p class="text-fg-muted text-sm mb-6 text-center">The first three before you walk in. The rest if you want them.</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+      <div class="card">
+        <div class="tag mb-3">1 · Setup</div>
+        <h3 class="text-lg font-semibold mb-2">Prerequisites</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">The CLI installed, signed in with a <strong>personal</strong> Google account, and one successful run. Do this at home, not on venue wifi.</p>
+        <a href="viewer.html?file=resources/prerequisites.md" class="btn btn-primary">Read Prereqs</a>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">2 · Repo</div>
+        <h3 class="text-lg font-semibold mb-2">The Material</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">One small download, no git required: 320 support tickets, a changelog, and last quarter's report.</p>
+        <a href="viewer.html?file=resources/the-material.md" class="btn btn-primary">Get the Files</a>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">3 · Pre-read</div>
+        <h3 class="text-lg font-semibold mb-2">Start Here — 3 Minutes</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">The whole mental model in one page. If you read nothing else, read this on the way in.</p>
+        <a href="viewer.html?file=resources/start-here.md" class="btn btn-primary">Read it</a>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="card">
+        <div class="tag mb-3">Optional</div>
+        <h3 class="text-lg font-semibold mb-2">How the Antigravity CLI Works</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">The agent loop in more depth, for anyone who wants the theory before the practice.</p>
+        <a href="viewer.html?file=resources/how-agy-works.md" class="btn btn-secondary">Read it</a>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Optional</div>
+        <h3 class="text-lg font-semibold mb-2">The Free Tier &amp; Your Quota</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">What the Starter Quota gives you, why there are two pools, and how to check what a session actually costs you.</p>
+        <a href="viewer.html?file=resources/free-tier-and-quota.md" class="btn btn-secondary">See Options</a>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Optional</div>
+        <h3 class="text-lg font-semibold mb-2">KSA Access Notes</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Which Google accounts work from Saudi Arabia, and what to do when your work account is refused.</p>
+        <a href="viewer.html?file=resources/ksa-access.md" class="btn btn-secondary">Quick Notes</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== The Workshop ===== -->
+  <section class="mb-16">
+    <h2 class="text-2xl font-semibold mb-1 text-center">The Three Hours</h2>
+    <p class="text-fg-muted text-sm mb-6 text-center">Eight beats, about three hours. Contrast, then the work, then make it repeatable.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div class="card">
+        <div class="text-xs text-fg-muted mb-1 font-mono">30 min</div>
+        <h3 class="text-lg font-semibold mb-2">Beat 0 — Setup</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Get <code>agy</code> running inside the <code>nussaa/</code> folder, trust the workspace, and read last quarter's report while you wait.</p>
+        <a href="viewer.html?file=beats/beat-0-setup.md" class="btn btn-primary">Open Beat</a>
+      </div>
+      <div class="card">
+        <div class="text-xs text-fg-muted mb-1 font-mono">15 min</div>
+        <h3 class="text-lg font-semibold mb-2">Beat 1 — The Wall</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Do the job in a chat box. Paste tickets until you stop. Name what a chat structurally cannot do.</p>
+        <a href="viewer.html?file=beats/beat-1-the-wall.md" class="btn btn-primary">Open Beat</a>
+      </div>
+      <div class="card">
+        <div class="text-xs text-fg-muted mb-1 font-mono">20 min</div>
+        <h3 class="text-lg font-semibold mb-2">Beat 2 — The Loop</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Same job, same folder, same model. It reads all 200 tickets, asking permission as it goes. Meet <code>AGENTS.md</code>.</p>
+        <a href="viewer.html?file=beats/beat-2-the-loop.md" class="btn btn-primary">Open Beat</a>
+      </div>
+      <div class="card">
+        <div class="text-xs text-fg-muted mb-1 font-mono">45 min</div>
+        <h3 class="text-lg font-semibold mb-2">Beat 3 — The Work</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Plan Mode, a model choice that costs you something, then the real report. Ends on the question the whole day turns on.</p>
+        <a href="viewer.html?file=beats/beat-3-the-work.md" class="btn btn-primary">Open Beat</a>
+      </div>
+      <div class="card">
+        <div class="text-xs text-fg-muted mb-1 font-mono">30 min</div>
+        <h3 class="text-lg font-semibold mb-2">Beat 4 — The Harvest</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Ask the agent to write down what you just did, as a Skill. Then fix the two things it got wrong.</p>
+        <a href="viewer.html?file=beats/beat-4-the-harvest.md" class="btn btn-primary">Open Beat</a>
+      </div>
+      <div class="card">
+        <div class="text-xs text-fg-muted mb-1 font-mono">25 min</div>
+        <h3 class="text-lg font-semibold mb-2">Beat 5 — The Proof</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">A subagent runs your Skill cold on a second batch and tells you what it had to guess.</p>
+        <a href="viewer.html?file=beats/beat-5-the-proof.md" class="btn btn-primary">Open Beat</a>
+      </div>
+      <div class="card">
+        <div class="text-xs text-fg-muted mb-1 font-mono">10 min</div>
+        <h3 class="text-lg font-semibold mb-2">Beat 6 — Scale It</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Demo only. What the agent did when it could not find a folder, a browser handed over on purpose, and how a Skill leaves your laptop.</p>
+        <a href="viewer.html?file=beats/beat-6-scale-it.md" class="btn btn-primary">Open Beat</a>
+      </div>
+      <div class="card">
+        <div class="text-xs text-fg-muted mb-1 font-mono">5 min</div>
+        <h3 class="text-lg font-semibold mb-2">Beat 7 — Wrap</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">What you take home, and the one thing to do tonight.</p>
+        <a href="viewer.html?file=beats/beat-7-wrap.md" class="btn btn-primary">Open Beat</a>
+      </div>
+    </div>
+
+    <div class="max-w-3xl mx-auto mt-8 p-6 rounded-lg" style="background:#1e1f24;border:1px solid #2b2d33;">
+      <div class="text-xs uppercase tracking-widest font-semibold mb-3" style="color:#8ab4f8;letter-spacing:0.1em;">Every page has two views</div>
+      <p class="text-fg-muted leading-relaxed">
+        Each beat opens on the <strong style="color:#e8eaed;">Participant</strong> tab, which teaches on its own with no facilitator in the room. Switch to <strong style="color:#e8eaed;">Facilitator</strong> for timings, where to pause, and what to do when somebody is stuck.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== After Workshop ===== -->
+  <section class="mb-16">
+    <h2 class="text-2xl font-semibold mb-1 text-center">After the Workshop</h2>
+    <p class="text-fg-muted text-sm mb-6 text-center">Forty minutes this week is the difference between a good session and a changed habit.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="card">
+        <div class="tag mb-3">Lowest effort</div>
+        <h3 class="text-lg font-semibold mb-2">Write one AGENTS.md</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">For a folder you already work in. You feel it on the very next task, and it takes about fifteen minutes.</p>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Highest return</div>
+        <h3 class="text-lg font-semibold mb-2">Harvest one Skill</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Pick something you rebuilt last week. Do it once with <code>agy</code>, then ask for it back as a Skill and send a subagent at it.</p>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Your data</div>
+        <h3 class="text-lg font-semibold mb-2">Swap the folder</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Point today's Skill at a real pile of your own feedback. What breaks tells you exactly what your Skill assumed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Resources ===== -->
+  <section class="mb-16">
+    <h2 class="text-2xl font-semibold mb-1 text-center">Reference Materials</h2>
+    <p class="text-fg-muted text-sm mb-6 text-center">Open during the session, or afterwards when you are doing this on your own work.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="card">
+        <div class="tag mb-3">Reference</div>
+        <h3 class="text-lg font-semibold mb-2">Glossary</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Every term used today, in plain language. Written for people who have never run a test.</p>
+        <a href="viewer.html?file=resources/glossary.md" class="btn btn-secondary">Open Glossary</a>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Template</div>
+        <h3 class="text-lg font-semibold mb-2">Write Your Own AGENTS.md</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">The conventions file, annotated, for a folder of your own. The highest-return fifteen minutes in the whole toolkit.</p>
+        <a href="viewer.html?file=resources/agents-md-template.md" class="btn btn-secondary">View Template</a>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Walkthrough</div>
+        <h3 class="text-lg font-semibold mb-2">Plan Mode</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">What Plan Mode actually enforces in <code>agy</code>, and why reading the plan is the habit rather than approving it.</p>
+        <a href="viewer.html?file=resources/plan-mode.md" class="btn btn-secondary">View Walkthrough</a>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Safety</div>
+        <h3 class="text-lg font-semibold mb-2">Permissions &amp; Trust</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">The three layers that decide what this agent can touch — and a recorded case of the boundary earning its keep.</p>
+        <a href="viewer.html?file=resources/permissions-and-trust.md" class="btn btn-secondary">Read it</a>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Theory</div>
+        <h3 class="text-lg font-semibold mb-2">How the Antigravity CLI Works</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">The agent loop, the three claims, and what a chat box structurally cannot do.</p>
+        <a href="viewer.html?file=resources/how-agy-works.md" class="btn btn-secondary">Read it</a>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Reading</div>
+        <h3 class="text-lg font-semibold mb-2">Further Reading</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Where to go next: the official Antigravity docs, the codelabs, and the agent-design essays worth your weekend.</p>
+        <a href="viewer.html?file=resources/further-reading.md" class="btn btn-secondary">View List</a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== For Facilitators ===== -->
+  <section class="mb-16">
+    <h2 class="text-2xl font-semibold mb-1 text-center">For Facilitators</h2>
+    <p class="text-fg-muted text-sm mb-6 text-center">Running this yourself in your own city? Everything you need is here.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="card">
+        <div class="tag mb-3">Start</div>
+        <h3 class="text-lg font-semibold mb-2">The Facilitator Tabs</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Every beat page has one. Timings, where to pause, the exact questions to ask, and what to do when somebody is stuck. Beat 3's carries the planted-signal numbers.</p>
+        <a href="viewer.html?file=beats/beat-0-setup.md" class="btn btn-secondary">Open Beat 0</a>
+      </div>
+      <div class="card">
+        <div class="tag mb-3">Repo</div>
+        <h3 class="text-lg font-semibold mb-2">The Answer Key</h3>
+        <p class="text-fg-muted mb-4 leading-relaxed">Not on this site, on purpose. <code style="background:rgba(138,180,248,0.14);color:#aecbfa;padding:0.1rem 0.3rem;border-radius:3px;font-size:0.8125rem;">facilitator/</code> in the repo holds the planted signal, both routes attendees take to it, and the record of a full <code>agy</code> dry run.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="mt-24 pt-8 border-t border-border-soft text-center text-sm text-fg-muted">
+    <div class="mb-3">
+      <div class="text-fg-base font-semibold tracking-wide">AGENTECHNIC</div>
+      <div class="text-xs mt-1">A polytechnic for agent work. Hands-on, vocational, you leave able to do the job.</div>
+    </div>
+    <div class="mt-6">
+      From Agentechnic with <span class="heart" aria-label="love" title="love">♥</span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- Font size control — persists via localStorage, control itself uses px so it doesn't scale -->
+<div style="position:fixed;bottom:1.25rem;right:1.25rem;z-index:100;display:flex;align-items:center;gap:0.125rem;background:#1e1f24;border:1px solid #2b2d33;border-radius:0.375rem;padding:0.25rem 0.375rem;font-size:14px;">
+  <button id="font-dec" class="font-btn" onclick="adjFont(-1)" aria-label="Decrease font size" title="Smaller text"
+    style="background:none;border:none;cursor:pointer;color:#80868b;font-family:ui-monospace,monospace;font-size:11px;padding:0.125rem 0.5rem;border-radius:0.25rem;line-height:1.4;transition:color 0.12s;">A−</button>
+  <span id="font-pct"
+    style="font-family:ui-monospace,monospace;font-size:9px;color:#5f6368;min-width:1.875rem;text-align:center;display:inline-block;">100%</span>
+  <button id="font-inc" class="font-btn" onclick="adjFont(1)" aria-label="Increase font size" title="Larger text"
+    style="background:none;border:none;cursor:pointer;color:#80868b;font-family:ui-monospace,monospace;font-size:11px;padding:0.125rem 0.5rem;border-radius:0.25rem;line-height:1.4;transition:color 0.12s;">A+</button>
+</div>
+<script>
+  (function () {
+    var steps = [13, 14, 15, 16, 17, 18, 19, 20];
+    var base = 16;
+    function getSize() { return parseInt(localStorage.getItem('wsFontSize') || base, 10); }
+    function setSize(sz) {
+      sz = Math.max(steps[0], Math.min(steps[steps.length - 1], sz));
+      document.documentElement.style.fontSize = sz + 'px';
+      localStorage.setItem('wsFontSize', sz);
+      var pct = document.getElementById('font-pct');
+      if (pct) pct.textContent = Math.round(sz / base * 100) + '%';
+      var dec = document.getElementById('font-dec');
+      var inc = document.getElementById('font-inc');
+      if (dec) { dec.disabled = sz <= steps[0]; dec.style.opacity = sz <= steps[0] ? '0.3' : '1'; }
+      if (inc) { inc.disabled = sz >= steps[steps.length - 1]; inc.style.opacity = sz >= steps[steps.length - 1] ? '0.3' : '1'; }
+    }
+    window.adjFont = function (dir) {
+      var sz = getSize();
+      var idx = steps.indexOf(sz);
+      if (idx === -1) idx = steps.indexOf(base);
+      setSize(steps[Math.max(0, Math.min(steps.length - 1, idx + dir))]);
+    };
+    setSize(getSize());
+  })();
+</script>
+
+</body>
+</html>
