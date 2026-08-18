@@ -49,7 +49,7 @@ Nussaa (نص ساعة, "half an hour") is a food delivery app in Riyadh. The nam
 
 You are its support lead. Someone has handed you a quarter of complaints and asked what the themes were.
 
-Nussaa does not exist. Its restaurants, riders and customers were invented for this workshop.
+Nussaa does not exist. Its restaurants, riders and customers were invented for this workshop. You can see the company at [agentechnic.github.io/nussaa](https://agentechnic.github.io/nussaa/), which is also invented.
 
 ## The tickets
 
