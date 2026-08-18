@@ -25,14 +25,10 @@ No build step. Three layers:
    `beats/`, `resources/`, `facilitator/`.
 3. Markdown in `beats/`, `resources/`, `facilitator/` — the actual content.
 
-`nussaa/` is the workshop corpus attendees download. `scripts/build-download.sh`
-packages it as `nussaa.zip` and refuses to build if the answers have leaked in.
-
-`tools/` is the corpus generator and its property tests — Python, maintainer
-only, never touched during a session. The tickets under `nussaa/tickets-q1/`
-and `tickets-q2/` are its output, seeded at `20260815` and reproducible
-byte-identically. The counts in `facilitator/nussaa-answer-key.md` are
-assertions in `tools/tests/`, not prose.
+The ticket corpus is **not in this repository**. It is a shared fixture in
+[nussaa-tickets-corpus](https://github.com/agentechnic/nussaa-tickets-corpus), which also owns the generator, the property tests
+and the facilitator answer key. This workshop is pinned to corpus `v1.0.0`, and
+attendees download it from that repository's release.
 
 ## Conventions
 
@@ -59,12 +55,11 @@ assertions in `tools/tests/`, not prose.
   it works".
 - Do not add tracking, analytics, or third-party JS beyond the CDNs already in
   use.
-- Do not hand-edit files under `nussaa/tickets-q1/` or `tickets-q2/`. They are
-  generated. Change `tools/corpus/spec.py`, regenerate, re-run the tests, and
-  update the answer key — in that order.
-- Do not change the corpus without rebuilding `nussaa.zip`. The download and
-  the repo disagreeing is the worst failure mode this material has, because it
-  splits the room without anybody noticing.
+- Do not vendor the corpus back into this repository. If you need it locally,
+  download the pinned release. One copy, one version, one source of truth.
+- Do not change the corpus pin in one file. Three files carry the download URL,
+  and a room split across two corpus versions is the worst failure this
+  material has, because nobody notices until the counts disagree.
 - Do not put answer-key material in `beats/` or `resources/`. The planted
   signal and its numbers live in `facilitator/` and are not linked from the
   landing page.

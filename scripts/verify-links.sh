@@ -35,13 +35,25 @@ echo
 echo "checked: $checked link(s)"
 echo "missing: $missing"
 
-# The download link on several pages points at a built artifact rather than a
-# markdown file, so check it separately.
-if grep -rqE '\(nussaa\.zip\)|"nussaa\.zip"' index.html beats resources; then
-  if [[ -f nussaa.zip ]]; then
-    echo "ok: nussaa.zip present"
+# The corpus is a pinned release asset in another repository. Check the pin is
+# identical everywhere and that the asset actually resolves — a stale pin in one
+# file splits the room across two corpus versions.
+pins=$(grep -rhoE 'https://github\.com/agentechnic/nussaa-tickets-corpus/releases/download/[^)" ]+' \
+       index.html beats resources | sort -u)
+count=$(printf '%s\n' "$pins" | grep -c . || true)
+if [[ "$count" -eq 0 ]]; then
+  echo "MISS: no corpus download link found" >&2
+  missing=$((missing + 1))
+elif [[ "$count" -gt 1 ]]; then
+  echo "FAIL: download links disagree on the corpus version:" >&2
+  printf '  %s\n' $pins >&2
+  missing=$((missing + 1))
+else
+  code=$(curl -s -o /dev/null -w '%{http_code}' -L "$pins")
+  if [[ "$code" == "200" ]]; then
+    echo "ok: corpus pin resolves — $pins"
   else
-    echo "MISS nussaa.zip — run bash scripts/build-download.sh" >&2
+    echo "MISS: corpus pin returned $code — $pins" >&2
     missing=$((missing + 1))
   fi
 fi

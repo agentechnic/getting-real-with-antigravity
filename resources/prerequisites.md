@@ -47,7 +47,7 @@ More detail, including how to see what you have left: [the free tier and your qu
 
 Do this at home, not on venue wifi alongside twenty other people.
 
-**[Download nussaa.zip](nussaa.zip)** — small, no git needed. Unzip it anywhere.
+**[Download nussaa.zip](https://github.com/agentechnic/nussaa-tickets-corpus/releases/download/v1.0.0/nussaa.zip)** — 108KB, no git needed. Unzip it anywhere.
 
 ```bash
 cd nussaa

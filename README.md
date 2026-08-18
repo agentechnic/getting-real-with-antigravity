@@ -26,10 +26,8 @@ index.html        landing page
 viewer.html       markdown renderer (?file=beats/beat-0-setup.md)
 beats/            the eight beats — participant and facilitator views in one file
 resources/        prereqs, glossary, plan mode, permissions, quota, templates
-facilitator/      answer key and dry-run record — not linked from the site
-nussaa/           the corpus attendees download
-scripts/          build the download, verify links
-tools/            corpus generator + property tests (maintainers only)
+facilitator/      dry-run record — not linked from the site
+scripts/          verify links
 ```
 
 ## The shape of the session
@@ -54,34 +52,33 @@ Two things to do before the day:
    Workspace accounts are frequently blocked from the Antigravity CLI by an
    admin setting, and it cannot be fixed in the room. This is the single
    biggest risk to Beat 0.
-2. **Read `facilitator/nussaa-answer-key.md` and `facilitator/agy-dry-run.md`.**
-   The first holds the planted signal and both routes attendees take to it. The
-   second is the record of a full run on `agy`, including what broke.
+2. **Read the [corpus answer key](https://github.com/agentechnic/nussaa-tickets-corpus/blob/main/facilitator/nussaa-answer-key.md)
+   and `facilitator/agy-dry-run.md`.** The first holds the planted signal and
+   both routes attendees take to it. The second is the record of a full run on
+   `agy`, including what broke.
 
-Rebuild the attendee download after any change to the corpus:
+After any change to links or content:
 
 ```bash
-bash scripts/build-download.sh
 bash scripts/verify-links.sh
 ```
 
-### Maintaining the corpus
+### The corpus lives elsewhere
 
-The 320 tickets are generated, not hand-written. Seeded at `20260815`, so the
-corpus reproduces byte-identically and the facilitator answer key's counts stay
-true.
+The 320 tickets are not in this repository. They are a shared fixture used by
+more than one workshop, and they live in
+[**nussaa-tickets-corpus**](https://github.com/agentechnic/nussaa-tickets-corpus) with their generator, their property tests and
+the facilitator answer key.
 
-```bash
-cd tools
-uv run python -m corpus.generate    # regenerate the corpus
-uv run pytest                       # 113 property tests over it
-```
+**This workshop is calibrated against corpus `v1.0.0`.** Every count in the
+beats and in the answer key comes from that version. If you bump the corpus,
+re-read the facilitator notes before you run the session — a spec change moves
+the numbers.
 
-Attendees need no Python. This is the only part of the repository that does.
-
-Change `tools/corpus/spec.py` and the answer key's numbers stop being true —
-re-run the tests, update `facilitator/nussaa-answer-key.md`, then rebuild
-`nussaa.zip`.
+The download links in `resources/prerequisites.md`,
+`resources/the-material.md` and `beats/beat-0-setup.md` point at a pinned
+release asset. Change the pin in all three or none — `verify-links.sh` fails
+if they disagree.
 
 ## Cost
 

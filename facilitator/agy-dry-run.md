@@ -7,7 +7,7 @@ The planted signal was found unaided, the harvested Skill survived a cold run
 on Q2 without inheriting Q1's story, and the plugin bundle validated.
 
 This is the record of what actually happened, including what broke. The
-generator's ground truth is in `nussaa-answer-key.md`; the two do not match,
+generator's ground truth is in the [corpus answer key](https://github.com/agentechnic/nussaa-tickets-corpus/blob/main/facilitator/nussaa-answer-key.md); the two do not match,
 and the gap is the point.
 
 ---
