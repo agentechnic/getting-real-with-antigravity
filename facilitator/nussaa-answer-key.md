@@ -127,16 +127,28 @@ which is exactly what the subagent run is meant to expose. If every attendee's
 Skill passes the cold run first time, be suspicious — ask to see the Skill,
 not the report.
 
-## Where the corpus comes from
+## Regenerating
 
-The ticket corpus is generated, seeded, and reproduces byte-identically. The
-generator and its property tests live in the original Claude Code workshop
-repository under `tools/`; this repository ships the generated output only.
+```bash
+cd tools && uv run python -m corpus.generate
+```
+
+Seeded at `20260815`, so it reproduces byte-identically. Nothing else in this
+repository needs Python — the generator is a maintainer tool and attendees
+never touch it.
+
+The property tests assert the counts this page states:
+
+```bash
+cd tools && uv run pytest        # 113 tests
+```
 
 Two consequences worth knowing:
 
 - **Every number on this page is the generator's ground truth**, not a
   transcript of any particular run. See `agy-dry-run.md` for what a real run
-  actually produced, and why the two differ.
-- **If you regenerate with a changed spec, this page stops being true.**
-  Re-run the generator's tests and update the tables here before the session.
+  on `agy` actually produced, and why the two differ.
+- **If you change anything in `tools/corpus/spec.py`, every number on this
+  page stops being true.** Re-run the tests, update the tables here, and
+  rebuild the attendee download with `bash scripts/build-download.sh` — or the
+  zip and the repo disagree and half the room works from different material.

@@ -2,6 +2,14 @@
 *.swp
 .preview-*.png
 
+# Python — the corpus generator under tools/ is tracked, its scratch is not.
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+tools/.venv/
+tools/uv.lock
+
 # nussaa.zip is deliberately NOT ignored — GitHub Pages serves it as the
-# attendee download. Rebuild it with scripts/build-download.sh after any
-# change to nussaa/.
+# attendee download, and there is no build step at deploy time. Rebuild it
+# with scripts/build-download.sh after any change to nussaa/.

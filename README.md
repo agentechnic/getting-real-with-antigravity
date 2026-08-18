@@ -29,6 +29,7 @@ resources/        prereqs, glossary, plan mode, permissions, quota, templates
 facilitator/      answer key and dry-run record — not linked from the site
 nussaa/           the corpus attendees download
 scripts/          build the download, verify links
+tools/            corpus generator + property tests (maintainers only)
 ```
 
 ## The shape of the session
@@ -63,6 +64,24 @@ Rebuild the attendee download after any change to the corpus:
 bash scripts/build-download.sh
 bash scripts/verify-links.sh
 ```
+
+### Maintaining the corpus
+
+The 320 tickets are generated, not hand-written. Seeded at `20260815`, so the
+corpus reproduces byte-identically and the facilitator answer key's counts stay
+true.
+
+```bash
+cd tools
+uv run python -m corpus.generate    # regenerate the corpus
+uv run pytest                       # 113 property tests over it
+```
+
+Attendees need no Python. This is the only part of the repository that does.
+
+Change `tools/corpus/spec.py` and the answer key's numbers stop being true —
+re-run the tests, update `facilitator/nussaa-answer-key.md`, then rebuild
+`nussaa.zip`.
 
 ## Cost
 

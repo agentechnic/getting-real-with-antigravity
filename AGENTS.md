@@ -28,6 +28,12 @@ No build step. Three layers:
 `nussaa/` is the workshop corpus attendees download. `scripts/build-download.sh`
 packages it as `nussaa.zip` and refuses to build if the answers have leaked in.
 
+`tools/` is the corpus generator and its property tests — Python, maintainer
+only, never touched during a session. The tickets under `nussaa/tickets-q1/`
+and `tickets-q2/` are its output, seeded at `20260815` and reproducible
+byte-identically. The counts in `facilitator/nussaa-answer-key.md` are
+assertions in `tools/tests/`, not prose.
+
 ## Conventions
 
 - Palette, taken from Antigravity's own dark design tokens: bg `#121317`,
@@ -53,6 +59,12 @@ packages it as `nussaa.zip` and refuses to build if the answers have leaked in.
   it works".
 - Do not add tracking, analytics, or third-party JS beyond the CDNs already in
   use.
+- Do not hand-edit files under `nussaa/tickets-q1/` or `tickets-q2/`. They are
+  generated. Change `tools/corpus/spec.py`, regenerate, re-run the tests, and
+  update the answer key — in that order.
+- Do not change the corpus without rebuilding `nussaa.zip`. The download and
+  the repo disagreeing is the worst failure mode this material has, because it
+  splits the room without anybody noticing.
 - Do not put answer-key material in `beats/` or `resources/`. The planted
   signal and its numbers live in `facilitator/` and are not linked from the
   landing page.
