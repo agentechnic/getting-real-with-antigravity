@@ -16,7 +16,7 @@ agy models         # lists the models your account can reach
 
 There is no `agy doctor`. If the CLI is not installed yet, `agy install` sets it up; the second command above is the real health check, because it only answers once you are signed in and your account is eligible.
 
-Then get the material. Download **[nussaa.zip](https://github.com/agentechnic/nussaa-tickets-corpus/releases/download/v1.1.0/nussaa.zip)**, unzip it, and:
+Then get the material. Download **[nussaa.zip](https://github.com/agentechnic/nussaa-tickets-corpus/releases/download/v1.2.0/nussaa.zip)**, unzip it, and:
 
 ```bash
 cd nussaa

@@ -27,7 +27,7 @@ No build step. Three layers:
 
 The ticket corpus is **not in this repository**. It is a shared fixture in
 [nussaa-tickets-corpus](https://github.com/agentechnic/nussaa-tickets-corpus), which also owns the generator, the property tests
-and the facilitator answer key. This workshop is pinned to corpus `v1.1.0`, and
+and the facilitator answer key. This workshop is pinned to corpus `v1.2.0`, and
 attendees download it from that repository's release.
 
 ## Conventions

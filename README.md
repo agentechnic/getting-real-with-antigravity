@@ -70,7 +70,7 @@ more than one workshop, and they live in
 [**nussaa-tickets-corpus**](https://github.com/agentechnic/nussaa-tickets-corpus) with their generator, their property tests and
 the facilitator answer key.
 
-**This workshop is calibrated against corpus `v1.1.0`.** Every count in the
+**This workshop is calibrated against corpus `v1.2.0`.** Every count in the
 beats and in the answer key comes from that version. If you bump the corpus,
 re-read the facilitator notes before you run the session — a spec change moves
 the numbers.
